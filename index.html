@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datenserver der T8</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: "Roboto", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            background-color: white;
+        }
+
+        .container {
+            position: absolute;
+            right: 32px;
+            left: 32px;
+            top: 16px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-link {
+            color: rgb(0, 0, 0);
+            text-decoration: none;
+            margin-left: 16px;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8)
+        }
+
+        .menu-link:hover {
+            text-decoration: underline;
+        }
+
+        .headline {
+
+            color: rgb(0, 0, 0);
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8)
+        }
+
+        .yellow {
+            color: rgb(201, 201, 49);
+        }
+
+        .formular {
+            position: absolute;
+            top: 250px;
+            left: 100px;
+            color: rgb(0, 0, 0);
+
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="container">
+        <h1 class="headline">Datenserver der <span class="yellow">T8</span></h1>
+        <div>
+            <a class="menu-link" href="">Kontakt</a>
+            <a class="menu-link" href="">Registrierung</a>
+        </div>
+
+    </div>
+        <form name="anmeldung" class="formular" action="/daten" method="post">
+            <label for="username">Benutzername:</label>
+            <input type="text" id="username" name="username"><br><br>
+            <label for="pwrd">Password:</label>
+            <input type="password" id="pwrd" name="pwrd"><br><br>
+            <input type="submit" value="Anmelden">
+    </form>
+
+</body>
+
+</html>
