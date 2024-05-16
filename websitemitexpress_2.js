@@ -71,7 +71,8 @@ app.post("/fileupload", function(req, res){
         if(err){
             return res.status(500).send(err);
         }
-        res.send("Datei hochgeladen");
+        res.s
+        res.sendFile(__dirname + "/daten.html");
     } );
 });
 
