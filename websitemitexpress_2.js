@@ -6,6 +6,7 @@ const fs = require("fs-extra");
 const formidable = require("formidable");
 const fileUpload = require("express-fileupload");
 const app = express();
+app.use(fileUpload());
 app.use(busboy());
 app.use(express.static(path.join(__dirname, "nutzer")))
 
@@ -60,12 +61,13 @@ app.post("/daten", (req, res) => {
 });
 
 app.post("/fileupload", function(req, res){
+    console.log(req.files.file.name);
     if(!req.files || Object.keys(req.files).length === 0){
         return res.status(400).send("Keine Dateien hochgeladen");
     }
     let sampleFile = req.files.file;
     console.log(sampleFile.name);
-    sampleFile.mv("/nutzer/" + sampleFile.name, function(err){
+    sampleFile.mv(path.join(__dirname,"/nutzer/" , sampleFile.name), function(err){
         if(err){
             return res.status(500).send(err);
         }
