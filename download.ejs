@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="openDownloadPopup()">Download</button>
+
+    <script>
+        function openDownloadPopup() {
+            // Get the container element where the files will be displayed
+            var container = document.createElement("div");
+            container.id = "fileContainer";
+            document.body.appendChild(container);
+
+            // Fetch the files from the server
+            fetch("/c:/Users/Lars/Desktop/webserverdevelopment/nutzer/")
+                .then(response => response.json())
+                .then(files => {
+                    // Loop through the files and create a link for each file
+                    files.forEach(file => {
+                        var link = document.createElement("a");
+                        link.href = "/c:/Users/Lars/Desktop/webserverdevelopment/nutzer/" + file;
+                        link.textContent = file;
+                        container.appendChild(link);
+                        container.appendChild(document.createElement("br"));
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching files:", error);
+                });
+        }
+    </script>
+</body>
+</html>

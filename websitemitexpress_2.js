@@ -8,7 +8,8 @@ const fileUpload = require("express-fileupload");
 const app = express();
 app.use(fileUpload());
 app.use(busboy());
-app.use(express.static(path.join(__dirname, "nutzer")))
+app.use(express.static(path.join(__dirname, "nutzer")));
+app.set("view engine", "ejs");
 
 const port = 3000;
 
@@ -53,32 +54,44 @@ app.post("/daten", (req, res) => {
         } else {
           console.log("Erfolgreich eingeloggt");
           nutzerinteraktion(nutzer);
-          res.sendFile(__dirname + "/daten.html");
+          res.sendFile(path.join(__dirname, "views/daten.html"));
+          res.render("daten", { nutzer });
+          var FILES_DIR = path.join(__dirname, "nutzer", nutzer);
+          fs.readdir(FILES_DIR, (err, files) => {
+            if (err) {
+              console.error("Fehler beim Lesen des Verzeichnisses", err);
+            } else {
+              console.log(files);
+              res.json(files);
+            }
+          });
         }
       }
     );
   });
 });
 
-app.post("/fileupload", function(req, res){
-    console.log(req.files.file.name);
-    if(!req.files || Object.keys(req.files).length === 0){
-        return res.status(400).send("Keine Dateien hochgeladen");
+app.post("/fileupload", function (req, res) {
+  console.log(req.files.file.name);
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send("Keine Dateien hochgeladen");
+  }
+  let sampleFile = req.files.file;
+  console.log(sampleFile.name);
+  sampleFile.mv(
+    path.join(__dirname, "/nutzer/", sampleFile.name),
+    function (err) {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      res.s;
+      res.sendFile(__dirname + "/daten.html");
     }
-    let sampleFile = req.files.file;
-    console.log(sampleFile.name);
-    sampleFile.mv(path.join(__dirname,"/nutzer/" , sampleFile.name), function(err){
-        if(err){
-            return res.status(500).send(err);
-        }
-        res.s
-        res.sendFile(__dirname + "/daten.html");
-    } );
+  );
 });
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
-  
 });
 
 function nutzerinteraktion(nutzer) {

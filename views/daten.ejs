@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      body {
+        background-color: #f2f2f2;
+        font-family: Arial, sans-serif;
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+      h2 {
+        color: #333;
+        text-align: center;
+      }
+
+      form {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      input[type="file"] {
+        display: block;
+        margin: 0 auto;
+        padding: 10px;
+      }
+      input[type="file"]::file-selector-button {
+        background-color: #ffc107;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 10px;
+      }
+      input[type="file"]::file-selector-button:hover {
+        background-color: #ff9800;
+      }
+      input[type="submit"] {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #ffc107;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 10px;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #ff9800;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Datenspeicher von: <%= nutzer %></h1>
+    <div class="file-list" id="fileList"></div>
+    <script>
+      async function fetchFiles() {
+        try {
+          const response = await fetch("/nutzer");
+          console.log(response);
+          if (!response.ok) {
+            throw new Error("Netzwerk-Antwort war nicht ok");
+          }
+          const files = await response.json();
+          const fileList = document.getElementById("fileList");
+          fileList.innerHTML = ""; // Clear the previous list
+          const ul = document.createElement("ul");
+          files.forEach((file) => {
+            const li = document.createElement("li");
+            li.textContent = file;
+            ul.appendChild(li);
+          });
+          fileList.appendChild(ul);
+        } catch (error) {
+          console.error("Es gab ein Problem mit der Fetch-Operation:", error);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", fetchFiles);
+    </script>
+    <h2>Datei hochladen</h2>
+    <form action="fileupload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" />
+      <input type="submit" value="Neue Datei Hochladen" />
+    </form>
+  </body>
+</html>
