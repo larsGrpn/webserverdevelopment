@@ -6,6 +6,7 @@ const fs = require("fs-extra");
 const formidable = require("formidable");
 const fileUpload = require("express-fileupload");
 const app = express();
+let speicher;
 app.use(fileUpload());
 app.use(busboy());
 app.use(express.static(path.join(__dirname, "nutzer")));
@@ -54,16 +55,25 @@ app.post("/daten", (req, res) => {
         } else {
           console.log("Erfolgreich eingeloggt");
           nutzerinteraktion(nutzer);
-          res.sendFile(path.join(__dirname, "views/daten.html"));
-          res.render("daten", { nutzer });
+          var FILES_DIR = path.join(__dirname, "nutzer", nutzer);
+          fs.readdir(FILES_DIR, (err, files) => {
+            if (err) {
+              console.error("Fehler beim Lesen des Verzeichnisses", err);
+            } else {
+              speicher = files;
+            }
+            
+          });
+          res.sendFile(path.join(__dirname, "views/daten.ejs"));
+          res.render("daten", { nutzer:nutzer, files:speicher });
           var FILES_DIR = path.join(__dirname, "nutzer", nutzer);
           fs.readdir(FILES_DIR, (err, files) => {
             if (err) {
               console.error("Fehler beim Lesen des Verzeichnisses", err);
             } else {
               console.log(files);
-              res.json(files);
             }
+            
           });
         }
       }
