@@ -3,14 +3,15 @@ const mysql = require("mysql");
 const busboy = require("connect-busboy");
 const path = require("path");
 const fs = require("fs-extra");
-const formidable = require("formidable");
+const querystring = require("querystring");
 const fileUpload = require("express-fileupload");
 const app = express();
-let speicher;
+const pug = require("pug");
+let speicher='';
 app.use(fileUpload());
 app.use(busboy());
 app.use(express.static(path.join(__dirname, "nutzer")));
-app.set("view engine", "ejs");
+
 
 const port = 3000;
 
@@ -55,25 +56,23 @@ app.post("/daten", (req, res) => {
         } else {
           console.log("Erfolgreich eingeloggt");
           nutzerinteraktion(nutzer);
-          var FILES_DIR = path.join(__dirname, "nutzer", nutzer);
-          fs.readdir(FILES_DIR, (err, files) => {
+          
+
+          let verzeichnis = path.join(__dirname, "nutzer", nutzer);
+
+          console.log(verzeichnis);
+          fs.readdir(verzeichnis, (err, files) => {
             if (err) {
               console.error("Fehler beim Lesen des Verzeichnisses", err);
             } else {
               speicher = files;
             }
-            
-          });
-          res.sendFile(path.join(__dirname, "views/daten.ejs"));
-          res.render("daten", { nutzer:nutzer, files:speicher });
-          var FILES_DIR = path.join(__dirname, "nutzer", nutzer);
-          fs.readdir(FILES_DIR, (err, files) => {
-            if (err) {
-              console.error("Fehler beim Lesen des Verzeichnisses", err);
-            } else {
-              console.log(files);
-            }
-            
+            const compiledFunction = pug.compileFile("./daten.pug");
+            res.write(compiledFunction({ 
+              nutzer,
+              speicher,
+            }));
+            res.end();
           });
         }
       }
@@ -94,7 +93,6 @@ app.post("/fileupload", function (req, res) {
       if (err) {
         return res.status(500).send(err);
       }
-      res.s;
       res.sendFile(__dirname + "/daten.html");
     }
   );
