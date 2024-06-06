@@ -7,11 +7,12 @@ const querystring = require("querystring");
 const fileUpload = require("express-fileupload");
 const app = express();
 const pug = require("pug");
-let speicher='';
+let speicher = "";
+let nutzer = "";
+let dateiennutzer = "";
 app.use(fileUpload());
 app.use(busboy());
 app.use(express.static(path.join(__dirname, "nutzer")));
-
 
 const port = 3000;
 
@@ -42,9 +43,10 @@ app.post("/daten", (req, res) => {
   });
   req.on("end", () => {
     const formdata = new URLSearchParams(body);
-    const nutzer = formdata.get("username");
+    nutzer = formdata.get("username");
     const pwrd = formdata.get("pwrd");
     console.log(nutzer + " " + pwrd);
+
     db.query(
       "SELECT * FROM nutzer WHERE nutzername = ? AND pwrd = ?",
       [nutzer, pwrd],
@@ -56,10 +58,7 @@ app.post("/daten", (req, res) => {
         } else {
           console.log("Erfolgreich eingeloggt");
           nutzerinteraktion(nutzer);
-          
-
           let verzeichnis = path.join(__dirname, "nutzer", nutzer);
-
           console.log(verzeichnis);
           fs.readdir(verzeichnis, (err, files) => {
             if (err) {
@@ -68,10 +67,7 @@ app.post("/daten", (req, res) => {
               speicher = files;
             }
             const compiledFunction = pug.compileFile("./daten.pug");
-            res.write(compiledFunction({ 
-              nutzer,
-              speicher,
-            }));
+            res.write(compiledFunction({ nutzer, speicher }));
             res.end();
           });
         }
@@ -81,21 +77,32 @@ app.post("/daten", (req, res) => {
 });
 
 app.post("/fileupload", function (req, res) {
-  console.log(req.files.file.name);
+  //console.log(req.files.file.name);
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send("Keine Dateien hochgeladen");
+    res.end();
   }
   let sampleFile = req.files.file;
   console.log(sampleFile.name);
   sampleFile.mv(
-    path.join(__dirname, "/nutzer/", sampleFile.name),
+    path.join(__dirname, "/nutzer/", nutzer, "/", sampleFile.name),
+
     function (err) {
       if (err) {
         return res.status(500).send(err);
       }
-      res.sendFile(__dirname + "/daten.html");
     }
   );
+  
+  const compiledFunction = pug.compileFile("./daten.pug");
+  res.write(compiledFunction({ nutzer, speicher }));
+  res.redirect("localhost:3000/daten");
+  res.end();
+});
+app.post("/zurueck", function (req, res) {
+  const compiledFunction = pug.compileFile("./daten.pug");
+  res.write(compiledFunction({ nutzer, speicher }));
+  res.end();
 });
 
 app.listen(port, () => {

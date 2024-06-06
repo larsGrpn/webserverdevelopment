@@ -61,11 +61,24 @@ html(lang='de')
             input[type="submit"]:hover {
                 background-color: #ff9800;
             }
+            button {
+                display: block;
+                margin: 20px auto;
+                padding: 10px 20px;
+                background-color: #ffc107;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 10px;
+            }
     body
         h1="Dateinspeicher von: " + nutzer
         div
-            each file in speicher 
+            each file in files 
+                
                 div= file
+                form(action='download', method='post')
+                    button(type='submit', id='downloadbutton', name='#{file}') Download
         h2 Datei hochladen
         form(action='fileupload', method='post', enctype='multipart/form-data')
             input(type='file', name='file')

@@ -1,11 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        body {
+            background-color: antiquewhite;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: schwarz;
+            text-align: center;
+        }
+
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #ffc107;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff9800;
+        }
+    </style>
+</head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
-    h1 = Ueberschrift
+    <h1>Willkommen! Sie wurden eingeloggt</h1>
+    <form action="/daten" method="post">
+        <button type="submit">Datenspeicher</button>
+    </form>
+    <form action="/" method="get">
+        <button type="submit">Ausloggen</button>
+    </form>
 </body>
 </html>
